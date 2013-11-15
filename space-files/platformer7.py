@@ -21,7 +21,7 @@ WHITE = (255,255,255)
 GREEN = (0,255,0)
 TEXTCOLOR = (200,200,200)
 GREY = (200,100,100)
-FPS = 20
+FPS = 60
 
 
 def terminate():
@@ -138,7 +138,7 @@ def copy(matrix):
 def toggle(x,y,level, entities):
     #x,y are board positions
     anvil = level
-    if level[y][x] not in ('1', 'P', 'C', 'D', '.') and check_if_empty(x,y,entities):
+    if level[y][x] not in ('1', 'P', 'C', 'D', '.', 'E') and check_if_empty(x,y,entities):
         anvil[y][x] = '1'
     elif level[y][x] == '1':
         anvil[y][x] = ' '
@@ -419,20 +419,131 @@ class Shadow(Walker):
         
     
 
-maps = ((
+maps = (
+    (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P                  P",
+    "P  PPP            EP",
+    "P               PPPP",
+    "P                  P",
+    "P                  P",
+    "P        PPP       P",
+    "P                  P",
+    "P  PPP             P",
+    "P                  P",
+    "P          PPP     P",
+    "P                  P",
+    "P                  P",
+    "P      PPP         P",
+    "P                  P",
+    "PPPPPPPPPPPP       P",
+    "P          P     PPP",
+    "P          1   PPPPP",
+    "PS   P     1   PPPPP",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
+            (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "PPE                P",
+    "PPPPP              P",
+    "PPPPPPPP11111111111P",
+    "PPPPP             2P",
+    "PP                 P",
+    "P                 PP",
+    "P2             PPPPP",
+    "P11111111111PPPPPPPP",
+    "P              PPPPP",
+    "P                 PP",
+    "PP2                P",
+    "PPPPP              P",
+    "PPPPPPPP11111111111P",
+    "PPPPP              P",
+    "PP                 P",
+    "P                 PP",
+    "P              PPPPP",
+    "PS          PPPPPPPP",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
+            (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P                  P",
+    "P                 EP",
+    "P                3PP",
+    "P                PPP",
+    "P               PP P",
+    "P              PP  P",
+    "P             PP   P",
+    "P            PP    P",
+    "P           PP     P",
+    "P          PP      P",
+    "P         PP       P",
+    "P        PP        P",
+    "P       PP         P",
+    "P      PP          P",
+    "P     PP           P",
+    "P    PP            P",
+    "P   PP             P",
+    "PS PP              P",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
+            (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P            P1P   P",
+    "P           PP4PP  P",
+    "PS             EP  P",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
+            (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "PC                3P",
+    "PPPPPPPPPP PPPPPPPPP",
+    "P     P            P",
+    "P     b  2PPPPPP   P",
+    "P     PPPPP    P E P",
+    "P    1P        PPP P",
+    "P    1P   PP     P P",
+    "P     P   PP P   P P",
+    "P  11 P      P   P P",
+    "P  11 P      P   P P",
+    "P     P PP   P   P P",
+    "P     P PP   P   P P",
+    "P11   P      P   P P",
+    "P11   P      P   P P",
+    "P     P  PP  P   P P",
+    "P     P  PP  P   P P",
+    "P     P      P   P P",
+    "P  11   PP   P  SPBP",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
+    (
     
     "PPPPPPPPPPPPPPPPPPPP",
     "P      b 31 EP P  CP",
-    "P...   PPPPPPP PPP1P",
-    "PPP  PPPPPPPPP. 4  P",
+    "P      PPPPPPP PPP1P",
+    "PPP  PPPPPPPPP  4  P",
     "P    P  3          P",
     "P    P PP          P",
     "P      P      4    P",
-    "P     1P1 S        P",
+    "P     1P1          P",
     "PPP  P3 1PPPPPPPPPPP",
     "P     P1P          P",
     "P   PPP   2        P",
-    "P     P P  P PPPP  P",
+    "PS    P P  P PPPP  P",
     "PPPP  P P      P   P",
     "P B   P P      P   P",
     "PPP   P P2 4  PP   P",
@@ -444,56 +555,13 @@ maps = ((
     ),
         (
     "PPPPPPPPPPPPPPPPPPPP",
-    "P               P PP",
-    "P               P  P",
-    "P               P  P",
-    "P               P  P",
-    "P               P  P",
-    "P               P  P",
-    "P                  P",
-    "P 2222222222222222 P",
-    "P222222222222222222P",
-    "P         2        P",
-    "P    2             P",
-    "P            2     P",
-    "P       2          P",
-    "P 2                P",
-    "P     2            P",
-    "P           2      P",
-    "P        2         P",
-    "PSBT            2  P",
-    "PPPPPPPPPPPPPPPPPPPP",),
-        (
-    "PPPPPPPPPPPPPPPPPPPP",
-    "P                  P",
-    "P PPPPPPPPPPPPPPPP P",
-    "P P    1T  1     P P",
-    "P P     111      P P",
-    "P P              P P",
-    "P P              P P",
-    "P P              P P",
-    "P P              P P",
-    "P P              P P",
-    "P P              P P",
-    "P C B        S   P P",
-    "P PPPPPPPPPPPPPPPP P",
-    "P PP  PPPPPPPPPPPP P",
-    "P P  211         P P",
-    "P P  PPPP      2 P P",
-    "P                P P",
-    "PPPPPPPPPPPPPPPPPP P",
-    "P                  P",
-    "PPPPPPPPPPPPPPPPPPPP",
-    ),
-        (
-    "PPPPPPPPPPPPPPPPPPPP",
-    "P T               PP",
-    "PPPPPPPPPPPPPPPPP1 P",
-    "P P        PPPPP P P",
-    "P P      P  2    P P",
-    "P P      P  2    P P",
-    "P P      P  2    P P",
-    "P P      PPPPPPP C P",
+    "P C              PPP",
+    "PPPPPPPPPPPPPPPP1 PP",
+    "P P       PPPPP P PP",
+    "P P     P  2    P PP",
+    "P P     P  2    P PP",
+    "P P     P  2    P  P",
+    "P P      PPPPPP bE P",
     "P P   P       2PPP P",
     "P PP P2       P    P",
     "P P   PPPPPP      PP",
@@ -549,7 +617,72 @@ maps = ((
     "PPPPP1111PP   PP   P",
     "PE     11PP        P",
     "PP     11PP       4P",
-    "PPPPPPPPPPPPPPPPPPPP",))
+    "PPPPPPPPPPPPPPPPPPPP",),
+        (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P        PP        P",
+    "P        PP        P",
+    "P        PP        P",
+    "P    PPPPPPPPPP    P",
+    "P    P2  E   2P    P",
+    "P    P11PPPP11P    P",
+    "P    P  4     P    P",
+    "P    P2       P    P",
+    "P    P       2P    P",
+    "P    P2       P    P",
+    "P    P       2P    P",
+    "P    P2       P    P",
+    "P    P       2P    P",
+    "P    PS    4  P    P",
+    "P    PPPPPPPPPP    P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "PPPPPPPPPPPPPPPPPPPP",),
+        (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "PPPPPPPPPPPPPPPPPPPP",
+    "PS                2P",
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
+    (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ))
             
 
 def string_to_matrix(string):
@@ -615,10 +748,11 @@ def make_level(mapp):
 
 def main():
     #pygame.mixer.music.play(-1)
+    level_number = 0
     while True:
         # set up game
         left = right = up = False
-        prelevel, entities, enemies, buttons, gates, shadows, pushed, player = make_level(maps[5])
+        prelevel, entities, enemies, buttons, gates, shadows, pushed, player = make_level(maps[level_number])
         level = copy(prelevel)
         cloud_mode = stilled = False
         count = -0
@@ -727,7 +861,8 @@ def main():
                         if count%10 < 5: screen.blit(static_image, pygame.Rect(x,y,SQUAREWIDTH, SQUAREHEIGHT))
                         else: screen.blit(static_image_2, pygame.Rect(x,y,SQUAREWIDTH, SQUAREHEIGHT))
                     elif col == 'E':
-                        screen.blit(exit_image, pygame.Rect(x,y,SQUAREWIDTH,SQUAREHEIGHT))
+                        door_rect = pygame.Rect(x,y,SQUAREWIDTH,SQUAREHEIGHT)
+                        screen.blit(exit_image, door_rect)
                     elif col in ['B','M','G']:
                         screen.blit(button_images[col], pygame.Rect(x,y,SQUAREWIDTH,SQUAREHEIGHT))
                     elif col in ['b','g','m']:
@@ -760,6 +895,10 @@ def main():
             pygame.transform.scale(screen, (DISPLAYWIDTH, DISPLAYHEIGHT), window_surface)
             pygame.display.update()
             if player.dead:
+                waitForPlayerToPressKey()
+                break
+            elif player.rect.colliderect(door_rect):
+                level_number += 1
                 waitForPlayerToPressKey()
                 break
 
