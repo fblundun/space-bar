@@ -19,7 +19,7 @@ WEIGHT = 0.5
 BLACK = (0,0,0)
 WHITE = (255,255,255)
 GREEN = (0,255,0)
-TEXTCOLOR = (200,200,200)
+TEXTCOLOR = WHITE
 GREY = (200,100,100)
 FPS = 60
 
@@ -48,6 +48,7 @@ main_clock = pygame.time.Clock()
 window_surface = pygame.display.set_mode((DISPLAYWIDTH,DISPLAYHEIGHT))
 screen = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
 font = pygame.font.SysFont(None, 48)
+small_font = pygame.font.SysFont(None, 30)
 #pygame.mixer.music.load('music.mid') (add music here)
 
 '''static_images = []
@@ -115,13 +116,6 @@ for image in images:
     
     image.convert_alpha()
 
-'''button_image.set_colorkey(BLACK)
-pushed_button_image.convert()
-pushed_button_image.set_colorkey(BLACK)
-pushed_button_image.convert()
-button_image.convert()
-button_image.set_colorkey(BLACK)
-button_image.convert()'''
 def letter_to_number(string):
     if string in['B','b','C']:
         return 0
@@ -151,22 +145,16 @@ def check_if_empty(x,y,entities):
             return False
     return True
 ###title screen:
-#drawText('Platformer 3', font, screen, 0,0)
-#pygame.display.update()
-#waitForPlayerToPressKey()
+window_surface.fill((255,0,0))
+drawText('Press any key to begin', font, window_surface, 0,0)
+drawText('Arrow keys: Move & Jump', small_font, window_surface, 0,80)
+drawText('Arrow keys + spacebar: Create or destroy white blocks', small_font, window_surface, 0,120)
+pygame.display.update()
+waitForPlayerToPressKey()
 
 class Entity(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)    
-
-class Platform(Entity):
-    def __init__(self,x,y,color):
-        Entity.__init__(self)
-        self.x = x
-        self.y = y
-        self.image = pygame.Surface((SQUAREHEIGHT, SQUAREWIDTH))
-        self.image.fill(color)
-        self.rect = pygame.Rect(x,y,SQUAREWIDTH,SQUAREHEIGHT)
 
 class Button(Entity):
     def __init__(self,x,y,hue):
@@ -426,16 +414,16 @@ maps = (
     "P  PPP            EP",
     "P               PPPP",
     "P                  P",
-    "P                  P",
+    "P   PP             P",
     "P        PPP       P",
     "P                  P",
-    "P  PPP             P",
+    "P  PPP          PP P",
     "P                  P",
     "P          PPP     P",
-    "P                  P",
+    "P   PP             P",
     "P                  P",
     "P      PPP         P",
-    "P                  P",
+    "P             PP   P",
     "PPPPPPPPPPPP       P",
     "P          P     PPP",
     "P          1   PPPPP",
@@ -486,26 +474,92 @@ maps = (
     "PS PP              P",
     "PPPPPPPPPPPPPPPPPPPP",
     ),
+    (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P C                P",
+    "P PPPPPPPPPPPPPPPP P",
+    "P                  P",
+    "PPPPPPPPP  PPPPPPPPP",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "PS                BP",
+    "PPP              PPP",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "PPPP               P",
+    "P  P               P",
+    "PE b               P",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
+    (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P         P        P",
+    "P         P        P",
+    "P         P        P",
+    "P        PPP       P",
+    "P        444       P",
+    "P                  P",
+    "P       P   P      P",
+    "P       P   P   E  P",
+    "PPPPPPPPP   PPPPPPPP",
+    "P       P   P      P",
+    "P       P   P      P",
+    "P                  P",
+    "P         S        P",
+    "P        PPP       P",
+    "P         P        P",
+    "P         P        P",
+    "P         P        P",
+    "P         P        P",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
             (
     "PPPPPPPPPPPPPPPPPPPP",
     "P                  P",
+    "P    P   P   P     P",
+    "P P2            P  P",
+    "P   P1P PPP P1P    P",
+    "P  PP PPP PPP PPP  P",
+    "P    4   4   4 EPP P",
+    "P  PP PPP PPP PPP  P",
+    "P   PPP P1P PPP    P",
+    "P P2         S  P  P",
+    "P    P   P   P     P",
+    "P                  P",
+    "P                  P",
+    "P        P         P",
     "P                  P",
     "P                  P",
     "P                  P",
     "P                  P",
     "P                  P",
-    "P                  P",
-    "P                  P",
-    "P                  P",
-    "P                  P",
-    "P                  P",
-    "P                  P",
-    "P                  P",
-    "P                  P",
-    "P                  P",
-    "P            P1P   P",
-    "P           PP4PP  P",
-    "PS             EP  P",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
+    (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "PE  b2   1S      P P",
+    "PPPPP11PPPPPPPPP P P",
+    "P              P P P",
+    "P   1  3   1   P P P",
+    "P   PPPPPPPP   P P P",
+    "P   P      P   P P P",
+    "P   P      P   P P P",
+    "P   P  PP  P   P P P",
+    "P   P   P  PP  P P P",
+    "P   P   P    44P P P",
+    "P   P   PPPPPPPP P P",
+    "P   P            P P",
+    "P   P          C P P",
+    "P   P11PPPPPPPPPPPPP",
+    "P   P             4P",
+    "P   PPPPPPPPPPPPPP P",
+    "P B                P",
+    "PPP PPPPPPPPPPPPPPPP",
     "PPPPPPPPPPPPPPPPPPPP",
     ),
             (
@@ -573,28 +627,6 @@ maps = (
     "PP           12 PP P",
     "P  PPPPPPPPPPPP  P P",
     "PS               P P",
-    "PPPPPPPPPPPPPPPPPPPP",
-    ),
-        (
-    "PPPPPPPPPPPPPPPPPPPP",
-    "P      P    C      P",
-    "P      P           P",
-    "P      P           P",
-    "P      P           P",
-    "P      P    G      P",
-    "P      P           P",
-    "P      P      g    P",
-    "P      P           P",
-    "P  3   P           P",
-    "P  P   P           P",
-    "P  4   P         m P",
-    "P      P           P",
-    "P111 11P           P",
-    "P 4  4 P           P",
-    "P      P           P",
-    "P111111P           P",
-    "P      P           P",
-    "P  S   PMbN       BP",
     "PPPPPPPPPPPPPPPPPPPP",
     ),
         (
