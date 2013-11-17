@@ -6,7 +6,7 @@ SQUAREHEIGHT = SQUAREWIDTH = 20
 WINDOWHEIGHT = BOARDHEIGHT * SQUAREHEIGHT
 WINDOWWIDTH = BOARDWIDTH * SQUAREWIDTH
 DISPLAYWIDTH = DISPLAYHEIGHT = (WINDOWWIDTH * 3)//2
-PLAYERHEIGHT = 15
+PLAYERHEIGHT = 5
 PLAYERWIDTH = 15
 PLAYERSPEED = 1
 SHADOWSPEED = 1
@@ -14,6 +14,7 @@ ENEMYSPEED = 1
 TERMINALVEL = 4
 JUMPVEL = 5
 SOLIDTILES = ['1','P','b','g','m']
+ENEMYSOLIDTILES = ['1','P','b','g','m','X']
 #JUMPVEL = 15
 WEIGHT = 0.5
 BLACK = (0,0,0)
@@ -65,12 +66,12 @@ for i in range(2*SQUAREWIDTH):
     pygame.draw.lines(static_surface, (255,255,255), 0, ((i,0),(0,i)))
     pygame.draw.lines(static_surface, (255,255,255), 0, ((SQUAREWIDTH-i,SQUAREWIDTH),(SQUAREWIDTH,SQUAREWIDTH-i)))
     static_images.append(static_surface)'''
+bad_block_image = pygame.image.load('bad_block.png')
 cloud_image = pygame.image.load('cloud.png')
 wood_image = pygame.image.load('wood.png')
 static_image = pygame.image.load('static.png')
 static_image_2 = pygame.image.load('static_2.png')
 spinner_image = pygame.image.load('spinner.png')
-#spinner_image.set_masks((255, 65280, 16711680, 0))
 walker_image = pygame.image.load('walker.png')
 flyer_image = pygame.image.load('evil_eye.png')
 exit_image = pygame.image.load('exit.png')
@@ -79,8 +80,8 @@ pushed_button_image = pygame.image.load('pushed_button.png')
 closed_image = pygame.image.load('closed.png')
 open_image = pygame.image.load('open.png')
 button_image_B = pygame.image.load('button_B.png') #blue button
-button_image_G = pygame.image.load('button_G.png') #green
-button_image_M = pygame.image.load('button_M.png') #magenta
+button_image_G = pygame.image.load('button_G.png') #green button
+button_image_M = pygame.image.load('button_M.png') #magenta button
 button_images = {'B': button_image_B,
                  'G': button_image_G,
                  'M': button_image_M}
@@ -103,7 +104,7 @@ shadow_images = {'C': shadow_image_B,
                  'H': shadow_image_G,
                  'N': shadow_image_M}
 
-images = [static_image,static_image_2,walker_image,spinner_image,flyer_image,cloud_image,wood_image,open_image,pushed_button_image]
+images = [bad_block_image,static_image,static_image_2,walker_image,spinner_image,flyer_image,cloud_image,wood_image,open_image,pushed_button_image]
 for x in shadow_images: images.append(shadow_images[x])
 for x in closed_images: images.append(closed_images[x])
 for x in button_images: images.append(button_images[x])
@@ -132,7 +133,7 @@ def copy(matrix):
 def toggle(x,y,level, entities):
     #x,y are board positions
     anvil = level
-    if level[y][x] not in ('1', 'P', 'C', 'D', '.', 'E') and check_if_empty(x,y,entities):
+    if level[y][x] not in ('1', 'P', 'C', 'D', '.', 'E','X') and check_if_empty(x,y,entities):
         anvil[y][x] = '1'
     elif level[y][x] == '1':
         anvil[y][x] = ' '
@@ -149,6 +150,8 @@ window_surface.fill((255,0,0))
 drawText('Press any key to begin', font, window_surface, 0,0)
 drawText('Arrow keys: Move & Jump', small_font, window_surface, 0,80)
 drawText('Arrow keys + spacebar: Create or destroy white blocks', small_font, window_surface, 0,120)
+drawText('P: Pause', small_font, window_surface, 0,180)
+drawText('K: Restart level', small_font, window_surface, 0,240)
 pygame.display.update()
 waitForPlayerToPressKey()
 
@@ -163,6 +166,16 @@ class Button(Entity):
         self.image = button_images[hue]
         self.rect = pygame.Rect(x,y,SQUAREWIDTH, SQUAREHEIGHT)
 
+class Electric(Entity):
+    def __init__(self,x,y):
+        Entity.__init__(self)
+        self.x = x
+        self.y = y
+        self.image = bad_block_image
+        self.rect = (pygame.Rect(x,y,SQUAREWIDTH, SQUAREHEIGHT))
+    def update(self, level):
+        pass
+                  
 class Flyer(Entity):
     
     def __init__(self,x,y, facing = 'up'):
@@ -195,7 +208,7 @@ class Flyer(Entity):
         a,b = self.board_location_left()
         for x in range(0,20):
             for y in range(0,20):
-                if level[y][x] in SOLIDTILES:
+                if level[y][x] in ENEMYSOLIDTILES:
                     rectangle = pygame.Rect(x*SQUAREWIDTH,y*SQUAREHEIGHT, SQUAREWIDTH,SQUAREHEIGHT)
                     
                     if self.rect.colliderect(rectangle):
@@ -239,7 +252,7 @@ class Enemy(Entity):
         a,b = self.board_location_left()
         for x in range(0,20):
             for y in range(0,20):
-                if level[y][x] in SOLIDTILES:
+                if level[y][x] in ENEMYSOLIDTILES:
                     rectangle = pygame.Rect(x*SQUAREWIDTH,y*SQUAREHEIGHT, SQUAREWIDTH,SQUAREHEIGHT)
                     
                     if self.rect.colliderect(rectangle):
@@ -376,7 +389,7 @@ class Walker(Entity):
         self.falling = True
         for x in range(0,20):
             for y in range(0,20):
-                if level[y][x] in SOLIDTILES:
+                if level[y][x] in ENEMYSOLIDTILES:
                     rectangle = pygame.Rect(x*SQUAREWIDTH,y*SQUAREHEIGHT, SQUAREWIDTH,SQUAREHEIGHT)
                     
                     if self.rect.colliderect(rectangle):
@@ -422,12 +435,34 @@ maps = (
     "P          PPP     P",
     "P   PP             P",
     "P                  P",
-    "P      PPP         P",
+    "P     XPPP         P",
     "P             PP   P",
     "PPPPPPPPPPPP       P",
     "P          P     PPP",
     "P          1   PPPPP",
     "PS   P     1   PPPPP",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
+    (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P              E   P",
+    "P             PPP  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P  S               P",
+    "P PPP              P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "P                  P",
+    "PXXXXXXXXXXXXXXXXXXP",
     "PPPPPPPPPPPPPPPPPPPP",
     ),
             (
@@ -496,28 +531,6 @@ maps = (
     "PE b               P",
     "PPPPPPPPPPPPPPPPPPPP",
     ),
-    (
-    "PPPPPPPPPPPPPPPPPPPP",
-    "P         P        P",
-    "P         P        P",
-    "P         P        P",
-    "P        PPP       P",
-    "P        444       P",
-    "P                  P",
-    "P       P   P      P",
-    "P       P   P   E  P",
-    "PPPPPPPPP   PPPPPPPP",
-    "P       P   P      P",
-    "P       P   P      P",
-    "P                  P",
-    "P         S        P",
-    "P        PPP       P",
-    "P         P        P",
-    "P         P        P",
-    "P         P        P",
-    "P         P        P",
-    "PPPPPPPPPPPPPPPPPPPP",
-    ),
             (
     "PPPPPPPPPPPPPPPPPPPP",
     "P                  P",
@@ -537,7 +550,7 @@ maps = (
     "P                  P",
     "P                  P",
     "P                  P",
-    "P                  P",
+    "PXXXXXXXXXXXXXXXXXXP",
     "PPPPPPPPPPPPPPPPPPPP",
     ),
     (
@@ -634,16 +647,16 @@ maps = (
     "PC       PP H14    P",
     "P11111111PPPP    4 P",
     "P11 11 11PPP  2  P P",
-    "P11411411PP     P..P",
-    "P11111111PP    P ..P",
+    "P11411411PP     P  P",
+    "P11111111PP    P   P",
     "P        b    P GP P",
-    "P        PP     P..P",
-    "P S    B PP      ..P",
+    "P        PP     P  P",
+    "P S    B PP        P",
     "PPPPPPPPPPPPPPPPPPgP",
     "PPPPPPPPPPPPPPPPPP P",
-    "P 31 ....2m        P",
-    "P1P  ....PP        P",
-    "P P  ....PP  1N 1  P",
+    "P 31     2m        P",
+    "P1P      PP        P",
+    "P P      PP  1N 1  P",
     "P PPPPPPPPP 2PPP   P",
     "P     3 1PP    MP  P",
     "PPPPP1111PP   PP   P",
@@ -658,19 +671,131 @@ maps = (
     "P    PPPPPPPPPP    P",
     "P    P2  E   2P    P",
     "P    P11PPPP11P    P",
-    "P    P  4     P    P",
+    "P    P     4  P    P",
     "P    P2       P    P",
     "P    P       2P    P",
     "P    P2       P    P",
     "P    P       2P    P",
     "P    P2       P    P",
     "P    P       2P    P",
-    "P    PS    4  P    P",
+    "P    PS 4     P    P",
     "P    PPPPPPPPPP    P",
     "P                  P",
     "P                  P",
     "P                  P",
     "PPPPPPPPPPPPPPPPPPPP",),
+    
+
+(
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P111111111111111111P",
+    "P1  11111111111  11P",
+    "P1H 111  111111  11P",
+    "P111111 C1111111111P",
+    "P1111111111  111111P",
+    "P1111111111  111  1P",
+    "P111  1111111111N 1P",
+    "P1M1  1111111111111P",
+    "P1P111111  11111111P",
+    "P11111111  11111111P",
+    "P11  11111111111111P",
+    "P11  111111111  111P",
+    "P1111111  1111  111P",
+    "P1111111  111111111P",
+    "P11111B1111111111PbP",
+    "P  111P111111G111PgP",
+    "PS 1111111111P111PmP",
+    "P1111111111111111PEP",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
+    (
+    "XXXXXXXXXXXXXXXXXXXX",
+    "X                  X",
+    "X                  X",
+    "X        1         X",
+    "X                  X",
+    "X   XXXXXXXXXX     X",
+    "X   X        X     X",
+    "X   X E      X  1  X",
+    "X   X PP     X     X",
+    "X   X    X   X     X",
+    "X   XXXXXX   X     X",
+    "X            X     X",
+    "X 1          X     X",
+    "X            X     X",
+    "XXXXXXXXXXXXXX     X",
+    "X                  X",
+    "X  S          1    X",
+    "X PPP              X",
+    "X                  X",
+    "XXXXXXXXXXXXXXXXXXXX",
+    ),
+    (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P    m g b EP      P",
+    "P    PPPPPPPP      P",
+    "P            1 C1  P",
+    "P             PP   P",
+    "P  1N 1        4   P",
+    "P   PP             P",
+    "P    4   1H 1      P",
+    "P         PP       P",
+    "P2         4       P",
+    "P                  P",
+    "P                  P",
+    "P S        M       P",
+    "P PP       P       P",
+    "P              G   P",
+    "P    B         P   P",
+    "P    P             P",
+    "P                  P",
+    "PXXXXXXXXXXXXXXXXXXP",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
+        (
+    "PPPPPPPPPPPPPPPPPPPP",
+    "P         P        P",
+    "P         P        P",
+    "P         P        P",
+    "P        PPP       P",
+    "P        444       P",
+    "P                  P",
+    "P       P   P      P",
+    "P       P   P   E  P",
+    "PPPPPPPPP   PPPPPPPP",
+    "P       P   P      P",
+    "P       P   P      P",
+    "P                  P",
+    "P         S        P",
+    "P        PPP       P",
+    "P         P        P",
+    "P         P        P",
+    "P         P        P",
+    "P         P        P",
+    "PPPPPPPPPPPPPPPPPPPP",
+    ),
+        (
+    "XXXXXXXXXXXXXXXXXXXX",
+    "X                  X",
+    "X                  X",
+    "X        E         X",
+    "X       PPPP       X",
+    "X2                2X",
+    "X2                2X",
+    "X2                2X",
+    "X2                2X",
+    "X2                2X",
+    "X2                2X",
+    "X2                2X",
+    "X2                2X",
+    "X2                2X",
+    "X2                2X",
+    "X2                2X",
+    "X        S         X",
+    "X       PPPP       X",
+    "X                  X",
+    "XXXXXXXXXXXXXXXXXXXX",
+    ),
         (
     "PPPPPPPPPPPPPPPPPPPP",
     "P                  P",
@@ -714,7 +839,8 @@ maps = (
     "P                  P",
     "P                  P",
     "PPPPPPPPPPPPPPPPPPPP",
-    ))
+    ),
+    )
             
 
 def string_to_matrix(string):
@@ -756,6 +882,9 @@ def make_level(mapp):
                 f = Flyer(x,y,'down')
                 entities.add(f)
                 enemies.append(f)
+            elif col == 'X':
+                e = Electric(x,y)
+                enemies.append(e)
             elif col in ['B','G','M']:
                 button = Button(x,y,col)
                 button.image = button_images[col]
@@ -886,6 +1015,8 @@ def main():
                         screen.blit(cloud_image, pygame.Rect(x,y,SQUAREWIDTH, SQUAREHEIGHT))
                     elif col == 'P':
                         screen.blit(wood_image, pygame.Rect(x,y,SQUAREWIDTH,SQUAREHEIGHT))
+                    elif col == 'X':
+                        screen.blit(bad_block_image, pygame.Rect(x,y,SQUAREWIDTH, SQUAREHEIGHT))                          
                     elif col == '.':
                         #if (x + y) % (2*SQUAREWIDTH)== 0:
                             #screen.blit(static_images[count%SQUAREWIDTH], pygame.Rect(x,y,SQUAREWIDTH, SQUAREHEIGHT))
